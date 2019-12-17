@@ -3,7 +3,7 @@
 [![](https://img.shields.io/badge/patreon-donate-orange.svg)](https://www.patreon.com/e1on)
 [![Discord](https://discordapp.com/api/guilds/509065700401348630/widget.png)](http://discord.gg/fTHssTP)
 
-Discord bot which allows participants to change the color of the role
+This bot allows you to assign a role color to a user
 #### Using: ```!color HEX_value``` without ```#```
 
 ## Dependencies
