@@ -14,7 +14,7 @@ NodeJS >= 10
 Repository Cloning
 
 ```bash
-git clone git@github.com:LoliE1ON/discord-anime-bot.git
+git clone git@github.com:LoliE1ON/discord-color-picker.git
 ```
 
 Go to the project
