@@ -4,16 +4,21 @@ const color = require("./messages/color")
 
 module.exports = (client) => {
 
-    client.on('message', msg => {
+    client.on('message', message => {
 
         // Get help
-        if (msg.content === '!help') {
-            msg.reply(help())
+        if (message.content === '!help') {
+            message.reply(help())
         }
 
-        // Change user role color
-        if (msg.content === '!color') {
-            color(client, msg)
+        const args = message.content.split(' ');
+        const command = args.shift().toLowerCase();
+
+        // Change color
+        if (command === '!color') {
+            if (args.length > 0) {
+                color(client, message, args[0])
+            }
         }
 
     })
