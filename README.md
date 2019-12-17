@@ -4,7 +4,9 @@
 [![Discord](https://discordapp.com/api/guilds/509065700401348630/widget.png)](http://discord.gg/fTHssTP)
 
 This bot allows you to assign a role color to a user
-#### Using: ```!color HEX_value``` without ```#```
+#### Using:
+```!color HEX_value``` without ```#```
+```!help```
 
 ## Dependencies
 NodeJS >= 10
