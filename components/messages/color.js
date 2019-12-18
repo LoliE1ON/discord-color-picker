@@ -4,15 +4,17 @@ module.exports = (client, message, hex) => {
     global.COLOR_PICKER = {
         member: message.guild.members.get(message.author.id),
         role: message.guild.roles.find('name', `#${hex}`),
-        client: client,
-        message: message,
-        hex: hex
+        client,
+        message,
+        hex
     }
+
+    // Freeze object
+    Object.freeze(COLOR_PICKER)
 
     // Validate hex color
     if(!validateHex(hex)) {
-        message.reply(`Color incorrect: ${hex}`)
-        return
+        return message.reply(`Color incorrect: ${hex}`)
     }
 
     // Checking and removes old roles
@@ -20,8 +22,7 @@ module.exports = (client, message, hex) => {
 
     // Create new role
     if(!COLOR_PICKER.role) {
-        createRole(hex)
-        return
+        return createRole(hex)
     }
 
     // Assign role
