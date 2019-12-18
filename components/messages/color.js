@@ -1,3 +1,34 @@
+module.exports = (client, message, hex) => {
+
+    // Set global data
+    global.COLOR_PICKER = {
+        member: message.guild.members.get(message.author.id),
+        role: message.guild.roles.find('name', `#${hex}`),
+        client: client,
+        message: message,
+        hex: hex
+    }
+
+    // Validate hex color
+    if(!validateHex(hex)) {
+        message.reply(`Color incorrect: ${hex}`)
+        return
+    }
+
+    // Checking and removes old roles
+    removeRole(message.member.roles)
+
+    // Create new role
+    if(!COLOR_PICKER.role) {
+        createRole(hex)
+        return
+    }
+
+    // Assign role
+    assignRole(COLOR_PICKER.role)
+
+}
+
 // Validate hex value
 function validateHex(hex) {
     return typeof hex === 'string'
@@ -6,13 +37,13 @@ function validateHex(hex) {
 }
 
 // Remove old roles
-function removeRole(member, roles, hex) {
+function removeRole(roles) {
 
     roles.forEach(function(item) {
 
         let roleName = item.name.replace('#', '')
-        if(validateHex(roleName) && roleName !== hex) {
-            member.removeRole(item.id)
+        if(validateHex(roleName) && roleName !== COLOR_PICKER.hex) {
+            COLOR_PICKER.member.removeRole(item.id)
             console.log(`Remove old role ${item.id}`)
         }
     });
@@ -20,17 +51,17 @@ function removeRole(member, roles, hex) {
 }
 
 // Create new role
-function createRole(message, member, hex) {
+function createRole(hex) {
 
     // Create a new role
-    message.guild.createRole({
+    COLOR_PICKER.message.guild.createRole({
         name: `#${hex}`,
         color: hex,
     })
         .then(role => {
 
             // Assign role
-            assignRole(message, member, role, hex)
+            assignRole(role)
             console.log(`Created new role with color ${role.color} ${role.id}`)
 
         })
@@ -39,35 +70,11 @@ function createRole(message, member, hex) {
 }
 
 // Assign role
-function assignRole(message, member, role, hex) {
+function assignRole(role) {
 
-    if(member.roles.has(role.id)) return;
-    member.addRole(role.id);
-    message.reply(`color assigned: ${hex}`)
+    if(COLOR_PICKER.member.roles.has(role.id)) return;
 
-}
-
-module.exports = (client, message, hex) => {
-
-    // Validate hex color
-    if(!validateHex(hex)) {
-        message.reply(`Color incorrect: ${hex}`)
-        return
-    }
-
-    let member = message.guild.members.get(message.author.id);
-    let role = message.guild.roles.find('name', `#${hex}`);
-
-    // Checking and removes old roles
-    removeRole(member, message.member.roles, hex)
-
-    // Create new role
-    if(!role) {
-        createRole(message, member, hex)
-        return
-    }
-
-    // Assign role
-    assignRole(message, member, role, hex)
+    COLOR_PICKER.member.addRole(role.id);
+    COLOR_PICKER.message.reply(`color assigned: ${COLOR_PICKER.hex}`)
 
 }
