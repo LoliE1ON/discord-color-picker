@@ -10,7 +10,7 @@ This bot allows you to assign a role color to a user
 ```!help```
 
 
-![Discord change role color bot](https://media.discordapp.net/attachments/633684828033777723/656852843533172771/unknown.png)
+![Discord change role color bot](https://media.discordapp.net/attachments/633684828033777723/657196534462414848/e1871fa59f5d8ea0.png)
 
 ## Dependencies
 NodeJS >= 10
