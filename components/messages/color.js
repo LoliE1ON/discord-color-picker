@@ -1,4 +1,4 @@
-const Discord = require('discord.js')
+const { colorIncorrectEmbed, assignRoleEmbed } = require('../reply')
 
 module.exports = (client, message, hex) => {
 
@@ -23,24 +23,13 @@ module.exports = (client, message, hex) => {
 function handle() {
 
     // Validate hex color
-    if(!validateHex(COLOR_PICKER.hex)) {
-
-        const colorincorrectEmbed = new Discord.RichEmbed()
-            .setColor('#ff0000')
-            .setTitle('Color incorrect')
-            .addField('Color-HEX gives information about colors', 'You entered the wrong color. Need to enter Color-HEX', true)
-
-        return COLOR_PICKER.message.guild.channels.find(channel => channel.id === COLOR_PICKER.message.channel.id).send(colorincorrectEmbed)
-
-    }
+    if(!validateHex(COLOR_PICKER.hex)) return reply(colorIncorrectEmbed)
 
     // Checking and removes old roles
     removeRole(COLOR_PICKER.message.member.roles)
 
     // Create new role
-    if(!COLOR_PICKER.role) {
-        return createRole(COLOR_PICKER.hex)
-    }
+    if(!COLOR_PICKER.role) return createRole(COLOR_PICKER.hex)
 
     // Assign role
     assignRole(COLOR_PICKER.role)
@@ -58,7 +47,6 @@ function validateHex(hex) {
 function removeRole(roles) {
 
     roles.forEach(function(item) {
-
         let roleName = item.name.replace('#', '')
         if(validateHex(roleName) && roleName !== COLOR_PICKER.hex) {
             COLOR_PICKER.member.removeRole(item.id)
@@ -76,14 +64,14 @@ function createRole(hex) {
         name: `#${hex}`,
         color: hex,
     })
-        .then(role => {
+    .then(role => {
 
-            // Assign role
-            assignRole(role)
-            console.log(`Created new role with color ${role.color} ${role.id}`)
+        // Assign role
+        assignRole(role)
+        console.log(`Created new role with color ${role.color} ${role.id}`)
 
-        })
-        .catch(console.error)
+    })
+    .catch(console.error)
 
 }
 
@@ -91,13 +79,14 @@ function createRole(hex) {
 function assignRole(role) {
 
     if(COLOR_PICKER.member.roles.has(role.id)) return;
+
+    // Reply and assign role
     COLOR_PICKER.member.addRole(role.id);
+    return reply(assignRoleEmbed(COLOR_PICKER.hex))
 
-    const assignRoleEmbed = new Discord.RichEmbed()
-        .setColor('#' + COLOR_PICKER.hex)
-        .setTitle('Color successfully assigned')
+}
 
-    return COLOR_PICKER.message.guild.channels.find(channel => channel.id === COLOR_PICKER.message.channel.id).send(assignRoleEmbed)
-
-
+// Reply with template
+function reply(template) {
+    return COLOR_PICKER.message.guild.channels.find(channel => channel.id === COLOR_PICKER.message.channel.id).send(template)
 }
