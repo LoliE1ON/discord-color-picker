@@ -1,12 +1,14 @@
+const Discord = require('discord.js')
+
 module.exports = (client, message, hex) => {
 
     // Set global data
     global.COLOR_PICKER = {
         member: message.guild.members.get(message.author.id),
-        role: message.guild.roles.find('name', `#${hex}`),
+        role: message.guild.roles.find('name', `#${hex.replace('#', '')}`),
+        hex: hex.replace('#', ''),
         client,
-        message,
-        hex
+        message
     }
 
     // Freeze object
@@ -22,7 +24,14 @@ function handle() {
 
     // Validate hex color
     if(!validateHex(COLOR_PICKER.hex)) {
-        return COLOR_PICKER.message.reply(`Color incorrect: ${COLOR_PICKER.hex}`)
+
+        const colorincorrectEmbed = new Discord.RichEmbed()
+            .setColor('#ff0000')
+            .setTitle('Color incorrect')
+            .addField('Color-HEX gives information about colors', 'You entered the wrong color. Need to enter Color-HEX', true)
+
+        return COLOR_PICKER.message.guild.channels.find(channel => channel.id === COLOR_PICKER.message.channel.id).send(colorincorrectEmbed)
+
     }
 
     // Checking and removes old roles
@@ -82,8 +91,13 @@ function createRole(hex) {
 function assignRole(role) {
 
     if(COLOR_PICKER.member.roles.has(role.id)) return;
-
     COLOR_PICKER.member.addRole(role.id);
-    COLOR_PICKER.message.reply(`color assigned: ${COLOR_PICKER.hex}`)
+
+    const assignRoleEmbed = new Discord.RichEmbed()
+        .setColor('#' + COLOR_PICKER.hex)
+        .setTitle('Color successfully assigned')
+
+    return COLOR_PICKER.message.guild.channels.find(channel => channel.id === COLOR_PICKER.message.channel.id).send(assignRoleEmbed)
+
 
 }
