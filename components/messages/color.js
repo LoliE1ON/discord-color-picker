@@ -12,17 +12,25 @@ module.exports = (client, message, hex) => {
     // Freeze object
     Object.freeze(COLOR_PICKER)
 
+    // Run bot
+    handle()
+
+}
+
+// Handle message
+function handle() {
+
     // Validate hex color
-    if(!validateHex(hex)) {
-        return message.reply(`Color incorrect: ${hex}`)
+    if(!validateHex(COLOR_PICKER.hex)) {
+        return COLOR_PICKER.message.reply(`Color incorrect: ${COLOR_PICKER.hex}`)
     }
 
     // Checking and removes old roles
-    removeRole(message.member.roles)
+    removeRole(COLOR_PICKER.message.member.roles)
 
     // Create new role
     if(!COLOR_PICKER.role) {
-        return createRole(hex)
+        return createRole(COLOR_PICKER.hex)
     }
 
     // Assign role
